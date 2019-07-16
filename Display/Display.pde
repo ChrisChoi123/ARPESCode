@@ -13,7 +13,7 @@ public class Arpes {
     int i = 0;
     while(scan.hasNextLine()){
       String line = scan.nextLine();
-      String[] nums = line.split("	");
+      String[] nums = line.split("  ");
       for (int j = 0;j < nums.length;j++) {
         if (i == 0 && j == 0) {
           j++;
