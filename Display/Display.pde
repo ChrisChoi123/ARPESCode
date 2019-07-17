@@ -3,17 +3,20 @@ import java.io.*;
 
 double[][] data;
 double max;
+String fileName = "cro_007_S001.txt";
 
 void loadData(String filename) throws FileNotFoundException {
   String[] vals = loadStrings(filename);
-  data = new double[1055][801];
+  data = new double[vals.length][801];
   for (int i = 0;i < vals.length;i++){
     String[] nums = vals[i].split("\t");
-    for (int j = 0;j < nums.length;j++) {
-      if (i == 0 && j == 0) {
-        j++;
+    if (nums.length > 1) {
+      for (int j = 0;j < nums.length;j++) {
+        if (i == 0 && j == 0) {
+          j++;
+        }
+        data[i][j] = Double.parseDouble(nums[j]);
       }
-      data[i][j] = Double.parseDouble(nums[j]);
     }
   }
 }
@@ -83,7 +86,7 @@ void labelAxes() {
 void setup() {
   size(435,400); //520,280
   try{
-    loadData("cro_001.txt");
+    loadData(fileName);
   }
   catch(FileNotFoundException e){
     System.out.println("Invalid text file");
@@ -97,7 +100,7 @@ void setup() {
   stroke(0);
   rect(63,329-data[0].length/3,data.length/3+4,data[0].length/3+3);
   textSize(14);
-  text("root:cro_001: 1054 x 800 (no change)",130,42);
+  text("root:"+fileName+": "+(data.length-1)+" x "+ (data[1].length-1)+ " (no change)",110,42);
   labelAxes();
 }
 
