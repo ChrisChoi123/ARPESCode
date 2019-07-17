@@ -2,12 +2,14 @@ import java.util.*;
 import java.io.*;
 
 double[][] data;
+double[][] derivative;
 double max;
-String fileName = "cro_007_S001.txt";
+String fileName = "cro_001.txt";
 
 void loadData(String filename) throws FileNotFoundException {
   String[] vals = loadStrings(filename);
   data = new double[vals.length][801];
+  derivative = new double[vals.length][801];
   for (int i = 0;i < vals.length;i++){
     String[] nums = vals[i].split("\t");
     if (nums.length > 1) {
@@ -34,6 +36,7 @@ void getMaxVal() {
 }
 
 void normallise() {
+  getMaxVal();
   for (int i = 1;i < data.length;i++) {
     for (int j = 1;j < data[i].length;j++) {
       data[i][j] = data[i][j]/max;
@@ -41,16 +44,32 @@ void normallise() {
   }
 }
 
-void graph() {
-  for (int i = 1;i < data.length;i++) {
-    for (int j = 1;j < data[i].length;j++) {
-      if (data[i][j] > .5) {
-        fill(255,(int)(255*(data[i][j]-.5)*2),0);
-        rect(65+i/3,330-j/3,1,1);
+void graph(int mode) {
+  if (mode == 0) {
+    for (int i = 1;i < data.length;i++) {
+      for (int j = 1;j < data[i].length;j++) {
+        if (data[i][j] > .5) {
+          fill(255,(int)(255*(data[i][j]-.5)*2),0);
+          rect(65+i/3,330-j/3,1,1);
+        }
+        else {
+          fill((int)(255*(data[i][j]*2)),0,0);
+          rect(65+i/3,330-j/3,1,1);
+        }
       }
-      else {
-        fill((int)(255*(data[i][j]*2)),0,0);
-        rect(65+i/3,330-j/3,1,1);
+    }
+  }
+  else {
+    for (int i = 1;i < derivative.length;i++) {
+      for (int j = 1;j < derivative[i].length;j++) {
+        if (derivative[i][j] > .5) {
+          fill(255,(int)(255*(derivative[i][j]-.5)*2),0);
+          rect(65+i/3,330-j/3,1,1);
+        }
+        else {
+          fill((int)(255*(derivative[i][j]*2)),0,0);
+          rect(65+i/3,330-j/3,1,1);
+        }
       }
     }
   }
@@ -83,6 +102,19 @@ void labelAxes() {
   text("Binding Energy (eV)",180,385);
 }
 
+void differentiate(int step) {
+  for (int i = 1;i < data.length;i++) {
+    for (int j = 1;j < data[i].length;j++) {
+      if (j < step || j > data[i].length-(step+1)) {
+        //data[i][j] = 0;
+      }
+      else {
+        derivative[i][j] = 2*data[i][j]-data[i][j-step]-data[i][j+step];
+      }
+    }
+  }
+}
+
 void setup() {
   size(435,400); //520,280
   try{
@@ -91,11 +123,11 @@ void setup() {
   catch(FileNotFoundException e){
     System.out.println("Invalid text file");
   }
-  getMaxVal();
+  differentiate(25);
   normallise();
   background(255);
   noStroke();
-  graph();
+  graph(1);
   noFill();
   stroke(0);
   rect(63,329-data[0].length/3,data.length/3+4,data[0].length/3+3);
@@ -105,6 +137,4 @@ void setup() {
 }
 
 void draw() {
-
-  //text(""+mouseX+" "+mouseY, mouseX,mouseY);
 }
