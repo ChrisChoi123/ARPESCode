@@ -53,6 +53,22 @@ void graph() {
   }
 }
 
+void labelAxes() {
+  stroke(0);
+  textSize(13);
+  int a = 15;
+  for (int i = data[0].length-1;i > 0;i--) {
+    if (data[0][i] > a && data[0][i-1] < a) {
+      line(63,330-i/3,53,330-i/3);
+      if (a >= 10 || (a < 0 && a > -10)) text(""+a,33,330-i/3+5);
+      else if (a < 10 && a >= 0) text(""+a,41,330-i/3+5);
+      else if (a <= -10) text(""+a,23,330-i/3+5);
+      a-= 5;
+    }
+  }
+  text("deg",10,330-data[0].length);
+}
+
 void setup() {
   size(435,400); //520,280
   try{
@@ -72,9 +88,10 @@ void setup() {
   rect(63,329-data[0].length/3,data.length/3+4,data[0].length/3+3);
   textSize(14);
   text("root:cro_001: 1054 x 800 (no change)",130,42);
+  labelAxes();
 }
 
 void draw() {
 
-  text(""+mouseX+" "+mouseY, mouseX,mouseY);
+  //text(""+mouseX+" "+mouseY, mouseX,mouseY);
 }
