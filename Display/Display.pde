@@ -6,9 +6,6 @@ double max;
 
 void loadData(String filename) throws FileNotFoundException {
   String[] vals = loadStrings(filename);
-  /*File text = new File(filename);
-  Scanner scan = new Scanner(text);
-  */
   data = new double[1055][801];
   for (int i = 0;i < vals.length;i++){
     String[] nums = vals[i].split("\t");
@@ -46,18 +43,18 @@ void graph() {
     for (int j = 1;j < data[i].length;j++) {
       if (data[i][j] > .5) {
         fill(255,(int)(255*(data[i][j]-.5)*2),0);
-        rect(20+i/3,20+j/3,1/3,1/3);
+        rect(20+i/3,20+j/3,1,1);
       }
       else {
         fill((int)(255*(data[i][j]*2)),0,0);
-        rect(20+i/3,20+j/3,1/3,1/3);
+        rect(20+i/3,20+j/3,1,1);
       }
     }
   }
 }
 
 void setup() {
-  size(425,600); //520,280
+  size(425,400); //520,280
   try{
     loadData("cro_001.txt");
   }
@@ -67,8 +64,11 @@ void setup() {
   getMaxVal();
   normallise();
   background(255);
+  noStroke();
   graph();
+  System.out.println(max);
   noFill();
+  stroke(0);
   rect(20,20,data.length/3,data[0].length/3);
 }
 
