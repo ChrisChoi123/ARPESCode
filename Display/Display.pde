@@ -23,23 +23,43 @@ void loadData(String filename) throws FileNotFoundException {
   }
 }
 
-void getMaxVal() {
+void getMaxVal(int mode) {
   double output = 0;
-  for (int i = 1;i < data.length;i++) {
-    for (int j = 1;j < data[i].length;j++) {
-      if (data[i][j] > output) {
-        output = data[i][j];
+  if (mode == 0) {
+    for (int i = 1;i < data.length;i++) {
+      for (int j = 1;j < data[i].length;j++) {
+        if (data[i][j] > output) {
+          output = data[i][j];
+        }
+      }
+    }
+  }
+  else {
+    for (int i = 1;i < derivative.length;i++) {
+      for (int j = 1;j < derivative[i].length;j++) {
+        if (derivative[i][j] > output) {
+          output = derivative[i][j];
+        }
       }
     }
   }
   max = output;  
 }
 
-void normallise() {
-  getMaxVal();
-  for (int i = 1;i < data.length;i++) {
-    for (int j = 1;j < data[i].length;j++) {
-      data[i][j] = data[i][j]/max;
+void normallise(int mode) {
+  getMaxVal(mode);
+  if (mode == 0) {
+    for (int i = 1;i < data.length;i++) {
+      for (int j = 1;j < data[i].length;j++) {
+        data[i][j] = data[i][j]/max;
+      }
+    }
+  }
+  else {
+    for (int i = 1;i < derivative.length;i++) {
+      for (int j = 1;j < derivative[i].length;j++) {
+        derivative[i][j] = derivative[i][j]/max;
+      }
     }
   }
 }
@@ -102,14 +122,27 @@ void labelAxes() {
   text("Binding Energy (eV)",180,385);
 }
 
-void differentiate(int step) {
+void differentiate2(int step) {
   for (int i = 1;i < data.length;i++) {
     for (int j = 1;j < data[i].length;j++) {
       if (j < step || j > data[i].length-(step+1)) {
-        //data[i][j] = 0;
+        data[i][j] = 0;
       }
       else {
-        derivative[i][j] = 2*data[i][j]-data[i][j-step]-data[i][j+step];
+        derivative[i][j] = -(2*data[i][j]-data[i][j-step]-data[i][j+step]);
+      }
+    }
+  }
+}
+
+void differentiate1(int step) {
+  for (int i = 1;i < data.length;i++) {
+    for (int j = 1;j < data[i].length;j++) {
+      if (j < step) {
+        data[i][j] = 0;
+      }
+      else {
+        derivative[i][j] = -(data[i][j]-data[i][j-step]);
       }
     }
   }
@@ -123,8 +156,8 @@ void setup() {
   catch(FileNotFoundException e){
     System.out.println("Invalid text file");
   }
-  differentiate(25);
-  normallise();
+  differentiate1(25);
+  normallise(1);
   background(255);
   noStroke();
   graph(1);
