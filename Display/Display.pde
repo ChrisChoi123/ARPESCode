@@ -66,7 +66,18 @@ void labelAxes() {
       a-= 5;
     }
   }
-  text("deg",10,330-data[0].length);
+  text("deg",5,200);
+  double e = -1.2;
+  for (int i = 1;i < data.length-1;i++) {
+    if (data[i][0] < e && data[i+1][0] > e) {
+      line(63+i/3,333,63+i/3,341);
+      if ((""+e).substring(0,4).equals("-2.9")) text("0.0",63+i/3-8,355);
+      else if ((""+e).substring(0,3).equals("0.1")) text("0.2",63+i/3-8,355);
+      else if (e < 0) text((""+e).substring(0,4),63+i/3-15,355);
+      e += .2;
+    }
+  }
+  text("Binding Energy (eV)",180,385);
 }
 
 void setup() {
@@ -82,7 +93,6 @@ void setup() {
   background(255);
   noStroke();
   graph();
-  System.out.println(max);
   noFill();
   stroke(0);
   rect(63,329-data[0].length/3,data.length/3+4,data[0].length/3+3);
