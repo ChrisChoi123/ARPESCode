@@ -4,7 +4,8 @@ import java.io.*;
 double[][] data;
 double[][] derivative;
 double max;
-String fileName = "cro_001.txt";
+double min;
+String fileName = "cro_005.txt";
 
 void loadData(String filename) throws FileNotFoundException {
   String[] vals = loadStrings(filename);
@@ -24,8 +25,9 @@ void loadData(String filename) throws FileNotFoundException {
 }
 
 void getMaxVal(int mode) {
-  double output = 0;
+  double output;
   if (mode == 0) {
+    output = data[1][1];
     for (int i = 1;i < data.length;i++) {
       for (int j = 1;j < data[i].length;j++) {
         if (data[i][j] > output) {
@@ -35,6 +37,7 @@ void getMaxVal(int mode) {
     }
   }
   else {
+    output = derivative[1][1];
     for (int i = 1;i < derivative.length;i++) {
       for (int j = 1;j < derivative[i].length;j++) {
         if (derivative[i][j] > output) {
@@ -45,20 +48,45 @@ void getMaxVal(int mode) {
   }
   max = output;  
 }
+void getMinVal(int mode) {
+  double output;
+  if (mode == 0) {
+    output = data[1][1];
+    for (int i = 1;i < data.length;i++) {
+      for (int j = 1;j < data[i].length;j++) {
+        if (data[i][j] < output) {
+          output = data[i][j];
+        }
+      }
+    }
+  }
+  else {
+    output = derivative[1][1];
+    for (int i = 1;i < derivative.length;i++) {
+      for (int j = 1;j < derivative[i].length;j++) {
+        if (derivative[i][j] < output) {
+          output = derivative[i][j];
+        }
+      }
+    }
+  }
+  min = output;  
+}
 
 void normallise(int mode) {
   getMaxVal(mode);
+  getMinVal(mode);
   if (mode == 0) {
     for (int i = 1;i < data.length;i++) {
       for (int j = 1;j < data[i].length;j++) {
-        data[i][j] = data[i][j]/max;
+        data[i][j] = (data[i][j]-min)/(max-min);
       }
     }
   }
   else {
     for (int i = 1;i < derivative.length;i++) {
       for (int j = 1;j < derivative[i].length;j++) {
-        derivative[i][j] = derivative[i][j]/max;
+        derivative[i][j] = (derivative[i][j]-min)/(max-min);
       }
     }
   }
@@ -126,10 +154,10 @@ void differentiate2(int step) {
   for (int i = 1;i < data.length;i++) {
     for (int j = 1;j < data[i].length;j++) {
       if (j < step || j > data[i].length-(step+1)) {
-        data[i][j] = 0;
+        derivative[i][j] = 0;
       }
       else {
-        derivative[i][j] = -(2*data[i][j]-data[i][j-step]-data[i][j+step]);
+        derivative[i][j] = (2*data[i][j]-data[i][j-step]-data[i][j+step]);
       }
     }
   }
@@ -139,7 +167,7 @@ void differentiate1(int step) {
   for (int i = 1;i < data.length;i++) {
     for (int j = 1;j < data[i].length;j++) {
       if (j < step) {
-        data[i][j] = 0;
+        derivative[i][j] = 0;
       }
       else {
         derivative[i][j] = -(data[i][j]-data[i][j-step]);
@@ -156,7 +184,7 @@ void setup() {
   catch(FileNotFoundException e){
     System.out.println("Invalid text file");
   }
-  differentiate1(25);
+  differentiate2(25);
   normallise(1);
   background(255);
   noStroke();
@@ -165,6 +193,7 @@ void setup() {
   stroke(0);
   rect(63,329-data[0].length/3,data.length/3+4,data[0].length/3+3);
   textSize(14);
+  fill(0);
   text("root:"+fileName+": "+(data.length-1)+" x "+ (data[1].length-1)+ " (no change)",110,42);
   labelAxes();
 }
