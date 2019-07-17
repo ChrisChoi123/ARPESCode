@@ -43,18 +43,18 @@ void graph() {
     for (int j = 1;j < data[i].length;j++) {
       if (data[i][j] > .5) {
         fill(255,(int)(255*(data[i][j]-.5)*2),0);
-        rect(20+i/3,20+j/3,1,1);
+        rect(65+i/3,330-j/3,1,1);
       }
       else {
         fill((int)(255*(data[i][j]*2)),0,0);
-        rect(20+i/3,20+j/3,1,1);
+        rect(65+i/3,330-j/3,1,1);
       }
     }
   }
 }
 
 void setup() {
-  size(425,400); //520,280
+  size(435,400); //520,280
   try{
     loadData("cro_001.txt");
   }
@@ -69,8 +69,12 @@ void setup() {
   System.out.println(max);
   noFill();
   stroke(0);
-  rect(20,20,data.length/3,data[0].length/3);
+  rect(63,329-data[0].length/3,data.length/3+4,data[0].length/3+3);
+  textSize(14);
+  text("root:cro_001: 1054 x 800 (no change)",130,42);
 }
 
 void draw() {
+
+  text(""+mouseX+" "+mouseY, mouseX,mouseY);
 }
