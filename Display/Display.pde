@@ -5,7 +5,9 @@ double[][] data;
 double[][] derivative;
 double max;
 double min;
-String fileName = "cro_005.txt";
+double avg;
+double normRatio = 1;
+String fileName = "cro_001.txt";
 
 void loadData(String filename) throws FileNotFoundException {
   String[] vals = loadStrings(filename);
@@ -19,74 +21,6 @@ void loadData(String filename) throws FileNotFoundException {
           j++;
         }
         data[i][j] = Double.parseDouble(nums[j]);
-      }
-    }
-  }
-}
-
-void getMaxVal(int mode) {
-  double output;
-  if (mode == 0) {
-    output = data[1][1];
-    for (int i = 1;i < data.length;i++) {
-      for (int j = 1;j < data[i].length;j++) {
-        if (data[i][j] > output) {
-          output = data[i][j];
-        }
-      }
-    }
-  }
-  else {
-    output = derivative[1][1];
-    for (int i = 1;i < derivative.length;i++) {
-      for (int j = 1;j < derivative[i].length;j++) {
-        if (derivative[i][j] > output) {
-          output = derivative[i][j];
-        }
-      }
-    }
-  }
-  max = output;  
-}
-void getMinVal(int mode) {
-  double output;
-  if (mode == 0) {
-    output = data[1][1];
-    for (int i = 1;i < data.length;i++) {
-      for (int j = 1;j < data[i].length;j++) {
-        if (data[i][j] < output) {
-          output = data[i][j];
-        }
-      }
-    }
-  }
-  else {
-    output = derivative[1][1];
-    for (int i = 1;i < derivative.length;i++) {
-      for (int j = 1;j < derivative[i].length;j++) {
-        if (derivative[i][j] < output) {
-          output = derivative[i][j];
-        }
-      }
-    }
-  }
-  min = output;  
-}
-
-void normallise(int mode) {
-  getMaxVal(mode);
-  getMinVal(mode);
-  if (mode == 0) {
-    for (int i = 1;i < data.length;i++) {
-      for (int j = 1;j < data[i].length;j++) {
-        data[i][j] = (data[i][j]-min)/(max-min);
-      }
-    }
-  }
-  else {
-    for (int i = 1;i < derivative.length;i++) {
-      for (int j = 1;j < derivative[i].length;j++) {
-        derivative[i][j] = (derivative[i][j]-min)/(max-min);
       }
     }
   }
@@ -150,30 +84,8 @@ void labelAxes() {
   text("Binding Energy (eV)",180,385);
 }
 
-void differentiate2(int step) {
-  for (int i = 1;i < data.length;i++) {
-    for (int j = 1;j < data[i].length;j++) {
-      if (j < step || j > data[i].length-(step+1)) {
-        derivative[i][j] = 0;
-      }
-      else {
-        derivative[i][j] = (2*data[i][j]-data[i][j-step]-data[i][j+step]);
-      }
-    }
-  }
-}
-
-void differentiate1(int step) {
-  for (int i = 1;i < data.length;i++) {
-    for (int j = 1;j < data[i].length;j++) {
-      if (j < step) {
-        derivative[i][j] = 0;
-      }
-      else {
-        derivative[i][j] = -(data[i][j]-data[i][j-step]);
-      }
-    }
-  }
+void keyPressed() {
+  
 }
 
 void setup() {
@@ -188,6 +100,8 @@ void setup() {
   normallise(1);
   background(255);
   noStroke();
+  findAvg(1);
+  removeBackground(1);
   graph(1);
   noFill();
   stroke(0);
