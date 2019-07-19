@@ -8,8 +8,8 @@ double[][][] derivative3D;
 double max;
 double min;
 double avg;
-double threshhold = 10;
-int mode = 2;
+double threshhold = 25;
+int mode = 3;
 double normRatio = 1;
 int fileNum = 37;
 int fileAmount = 30;
@@ -105,6 +105,20 @@ void graph() {
       }
     }
   }
+  else if (mode == 3) {
+    for (int i = 0;i < derivative3D.length;i++) {
+      for (int j = 1;j < derivative3D[i][energy].length;j++) {
+        if (derivative3D[i][energy][j] > .5) {
+          fill(255,(int)(255*(derivative3D[i][energy][j]-.5)*2),0);
+          rect(65+9*i,330-j/3,27,1);
+        }
+        else {
+          fill((int)(255*(derivative3D[i][energy][j]*2)),0,0);
+          rect(65+9*i,330-j/3,27,1);
+        }
+      }
+    }
+  }
 }
 
 void labelAxes() {
@@ -189,7 +203,7 @@ void setup() {
     System.out.println("Invalid text file");
   }
   //differentiate2(25);
-  //minGrad(35);
+  minGrad(25);
   normallise();
   //removeBackground();
   //normallise();

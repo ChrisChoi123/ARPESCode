@@ -1,4 +1,57 @@
-void getMaxVal() {
+void getMaxVal(double[][] twoD) {
+  double output = twoD[1][1];
+  for (int i = 1;i < twoD.length;i++) {
+    for (int j = 1;j < twoD[i].length;j++) {
+      if (twoD[i][j] > threshhold || twoD[i][j] < -1*threshhold) ;
+      else if (derivative[i][j] > output) {
+        output = twoD[i][j];
+      }
+    }
+  }
+  max = output;
+}
+void getMaxVal(double[][][] threeD) {
+  double output = threeD[0][1][1];
+  for (int i = 1;i < threeD.length;i++) {
+    for (int j = 1;j < threeD[i].length;j++) {
+      for (int k = 1;k < threeD[i][j].length;k++) {
+        if (threeD[i][j][k] > threshhold || threeD[i][j][k] < -1*threshhold) ;
+        else if (threeD[i][j][k] > output) {
+          output = threeD[i][j][k];
+        }  
+      }
+    }
+  }
+  max = output;
+}
+void getMinVal(double[][] twoD) {
+  double output = twoD[1][1];
+  for (int i = 1;i < twoD.length;i++) {
+    for (int j = 1;j < twoD[i].length;j++) {
+      if (twoD[i][j] > threshhold || twoD[i][j] < -1*threshhold) ;
+      else if (derivative[i][j] < output) {
+        output = twoD[i][j];
+      }
+    }
+  }
+  min = output;
+}
+void getMinVal(double[][][] threeD) {
+  double output = threeD[0][1][1];
+  for (int i = 1;i < threeD.length;i++) {
+    for (int j = 1;j < threeD[i].length;j++) {
+      for (int k = 1;k < threeD[i][j].length;k++) {
+        if (threeD[i][j][k] > threshhold || threeD[i][j][k] < -1*threshhold) ;
+        else if (threeD[i][j][k] < output) {
+          output = threeD[i][j][k];
+        }  
+      }
+    }
+  }
+  min = output;
+}
+
+/*void getMaxVal() {
   double output =0;
   if (mode == 0) {
     output = data[1][1];
@@ -76,10 +129,25 @@ void getMinVal() {
   }
   min = output;  
 }
+*/
 
 void normallise() {
-  getMaxVal();
-  getMinVal();
+  if (mode == 0) {
+    getMaxVal(data);
+    getMinVal(data);
+  }
+  if (mode == 1) {
+    getMaxVal(derivative);
+    getMinVal(derivative);
+  }
+  if (mode == 2) {
+    getMaxVal(data3D);
+    getMinVal(data3D);
+  }
+  if (mode == 3) {
+    getMaxVal(derivative3D);
+    getMinVal(derivative3D);
+  }
   if (mode == 0) {
     for (int i = 1;i < data.length;i++) {
       for (int j = 1;j < data[i].length;j++) {
@@ -99,6 +167,15 @@ void normallise() {
       for (int j = 1;j < data3D[i].length;j++) {
         for (int k = 1;k < data3D[i][j].length;k++) {
           data3D[i][j][k] = (data3D[i][j][k]-min)/(max-min);
+        }
+      }
+    }
+  }
+  else if (mode == 3){
+    for (int i = 0;i < derivative3D.length;i++) {
+      for (int j = 1;j < derivative3D[i].length;j++) {
+        for (int k = 1;k < derivative3D[i][j].length;k++) {
+          derivative3D[i][j][k] = (derivative3D[i][j][k]-min)/(max-min);
         }
       }
     }
@@ -215,6 +292,12 @@ void minGrad(int step) {
     }
   }
   else {
-    
+    for (int i = 1; i < data3D.length-2;i++) {
+      for (int j = step+1; j < data3D[i][energy].length-step-1;j++) {
+        double gradP = (data3D[i+1][energy][j]-data3D[i-1][energy][j])/(-2);
+        double gradL = (data3D[i][energy][j-step]-data3D[i][energy][j+step])/(data3D[i][0][j-step]-data3D[i][0][j+step]);
+        derivative3D[i][energy][j] = data3D[i][energy][j]/Math.sqrt((gradP*gradP+gradL*gradL));
+      }
+    }
   }
 }
