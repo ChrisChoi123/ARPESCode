@@ -9,14 +9,16 @@ double max;
 double min;
 double avg;
 double threshhold = 10;
-int mode = 1;
+int mode = 2;
 double normRatio = 1;
-int fileNum;
+int fileNum = 18;
+int fileAmount = 33;
+int energy = 525; //around -.2 eV
 String fileName = "cro_001.txt";
 
-void loadData(String filename) throws FileNotFoundException {
+void loadData() throws FileNotFoundException {
   if (mode == 0 || mode == 1) {
-    String[] vals = loadStrings(filename);
+    String[] vals = loadStrings(fileName);
     data = new double[vals.length][801];
     derivative = new double[vals.length][801];
     for (int i = 0;i < vals.length;i++){
@@ -32,14 +34,15 @@ void loadData(String filename) throws FileNotFoundException {
     }
   }
   else {
-    data3D = new double[30][1055][801];
-    derivative3D = new double[30][1055][801];
-    for (int f = 1;f < 31;f++) {
+    data3D = new double[fileAmount][1055][801];
+    derivative3D = new double[fileAmount][1055][801];
+    for (int f = 1;f < fileAmount+1;f++) {
       String add = "";
       if (f < 10) {
         add = "0";
       }
       String[] vals = loadStrings("cro_0"+fileNum+"_S0"+add+f+".txt");
+      System.out.println("cro_0"+fileNum+"_S0"+add+f+".txt"+": loaded");
       for (int i = 0;i < vals.length;i++){
         String[] nums = vals[i].split("\t");
         if (nums.length > 1) {
@@ -88,8 +91,19 @@ void graph() {
       }
     }
   }
-  else if (mode == 3) {
-    
+  else if (mode == 2) {
+    for (int i = 0;i < data3D.length;i++) {
+      for (int j = 1;j < data3D[i][energy].length;j++) {
+        if (data3D[i][energy][j] > .5) {
+          fill(255,(int)(255*(data3D[i][energy][j]-.5)*2),0);
+          rect(65+9*i,330-j/3,27,1);
+        }
+        else {
+          fill((int)(255*(data3D[i][energy][j]*2)),0,0);
+          rect(65+9*i,330-j/3,27,1);
+        }
+      }
+    }
   }
 }
 
@@ -141,23 +155,25 @@ void display() {
   graph();
   noFill();
   stroke(0);
-  rect(63,329-data[0].length/3,data.length/3+4,data[0].length/3+3);
-  textSize(14);
-  fill(0);
-  text("root:"+fileName+": "+(data.length-1)+" x "+ (data[1].length-1)+ " (no change)",110,42);
-  labelAxes();
+  if (mode < 2) {
+    rect(63,329-data[0].length/3,data.length/3+4,data[0].length/3+3);
+    textSize(14);
+    fill(0);
+    text("root:"+fileName+": "+(data.length-1)+" x "+ (data[1].length-1)+ " (no change)",110,42);
+    labelAxes();
+  }
 }
 
 void setup() {
   size(435,400); 
   try{
-    loadData(fileName);
+    loadData();
   }
   catch(FileNotFoundException e){
     System.out.println("Invalid text file");
   }
   //differentiate2(25);
-  minGrad(35);
+  //minGrad(35);
   normallise();
   //removeBackground();
   //normallise();

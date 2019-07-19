@@ -1,5 +1,5 @@
 void getMaxVal() {
-  double output;
+  double output =0;
   if (mode == 0) {
     output = data[1][1];
     for (int i = 1;i < data.length;i++) {
@@ -10,7 +10,7 @@ void getMaxVal() {
       }
     }
   }
-  else {
+  else if (mode == 1) {
     output = derivative[1][1];
     for (int i = 1;i < derivative.length;i++) {
       for (int j = 1;j < derivative[i].length;j++) {
@@ -23,10 +23,22 @@ void getMaxVal() {
       }
     }
   }
+  else if (mode == 2){
+    output = data3D[0][1][1];
+    for (int i = 0;i < data3D.length;i++) {
+      for (int j = 1;j < data3D[i].length;j++) {
+        for (int k = 1;j < data3D[i][j].length;j++) {
+          if (data3D[i][j][k] > output) {
+            output = data3D[i][j][k];
+          }
+        }
+      }
+    }
+  }
   max = output;  
 }
 void getMinVal() {
-  double output;
+  double output = 0;
   if (mode == 0) {
     output = data[1][1];
     for (int i = 1;i < data.length;i++) {
@@ -37,7 +49,7 @@ void getMinVal() {
       }
     }
   }
-  else {
+  else if (mode == 1) {
     output = derivative[1][1];
     for (int i = 1;i < derivative.length;i++) {
       for (int j = 1;j < derivative[i].length;j++) {
@@ -46,6 +58,18 @@ void getMinVal() {
         }
         else if (derivative[i][j] < output) {
           output = derivative[i][j];
+        }
+      }
+    }
+  }
+  else if (mode == 2){
+    output = data3D[0][1][1];
+    for (int i = 0;i < data3D.length;i++) {
+      for (int j = 1;j < data3D[i].length;j++) {
+        for (int k = 1;j < data3D[i][j].length;j++) {
+          if (data3D[i][j][k] < output) {
+            output = data3D[i][j][k];
+          }
         }
       }
     }
@@ -63,10 +87,19 @@ void normallise() {
       }
     }
   }
-  else {
+  else if (mode == 1) {
     for (int i = 1;i < derivative.length;i++) {
       for (int j = 1;j < derivative[i].length;j++) {
         derivative[i][j] = (derivative[i][j]-min)/(max-min);
+      }
+    }
+  }
+  else if (mode == 2){
+    for (int i = 0;i < data3D.length;i++) {
+      for (int j = 1;j < data3D[i].length;j++) {
+        for (int k = 1;j < data3D[i][j].length;j++) {
+          data3D[i][j][k] = (data3D[i][j][k]-min)/(max-min);
+        }
       }
     }
   }
@@ -83,11 +116,21 @@ void findAvg() {
       }
     }
   }
-  else {
+  else if (mode == 1){
     for (int i = 1;i < derivative.length;i++) {
       for (int j = 1;j < derivative[i].length;j++) {
         total += derivative[i][j];
         amount++;
+      }
+    }
+  }
+  else if (mode == 2){
+    for (int i = 0;i < data3D.length;i++) {
+      for (int j = 1;j < data3D[i].length;j++) {
+        for (int k = 1;j < data3D[i][j].length;j++) {
+          total += data3D[i][j][k];
+          amount++;
+        }
       }
     }
   }
