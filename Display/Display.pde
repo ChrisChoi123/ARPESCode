@@ -8,10 +8,10 @@ double[][][] derivative3D;
 double max;
 double min;
 double avg;
-double threshhold = 50;
+double threshhold = 40;
 int mode = 3;
 double normRatio = 1;
-int fileNum = 37;
+int fileNum = 37; //18 or 37
 int fileAmount = 30;
 int energy = 725; //around -.2 eV
 String fileName = "cro_001.txt";
@@ -170,6 +170,19 @@ void keyPressed() {
       display();
     }
   }
+  if (key == ' ') {
+      if (mode == 0 || mode == 2) mode++;
+      else mode--;
+      if (mode == 2 || mode == 0) {
+        normallise();
+        display();
+      }
+      else if (mode == 3 || mode == 1) {
+        minGrad();
+        normallise();
+        display();
+      }
+    }
 }
 
 void display() {
@@ -189,6 +202,8 @@ void display() {
     textSize(14);
     fill(0);
     text("Energy: "+data3D[0][energy][0],110,42);
+    if (mode == 2 || mode == 0) text("Original Data",110,15);
+    else text("Minimum Gradient",110,15);
     text("Lateral",5,200);
     text("Angle",5,215);
     text("Polar Angle",180,385);
@@ -203,11 +218,8 @@ void setup() {
   catch(FileNotFoundException e){
     System.out.println("Invalid text file");
   }
-  //differentiate2();
   minGrad();
   normallise();
-  //removeBackground();
-  //normallise();
   display();
 }
 
