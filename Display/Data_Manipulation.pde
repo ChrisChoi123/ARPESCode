@@ -3,7 +3,7 @@ void getMaxVal(double[][] twoD) {
   for (int i = 1;i < twoD.length;i++) {
     for (int j = 1;j < twoD[i].length;j++) {
       if (twoD[i][j] > threshhold || twoD[i][j] < -1*threshhold) ;
-      else if (derivative[i][j] > output) {
+      else if (twoD[i][j] > output) {
         output = twoD[i][j];
       }
     }
@@ -50,86 +50,6 @@ void getMinVal(double[][][] threeD) {
   }
   min = output;
 }
-
-/*void getMaxVal() {
-  double output =0;
-  if (mode == 0) {
-    output = data[1][1];
-    for (int i = 1;i < data.length;i++) {
-      for (int j = 1;j < data[i].length;j++) {
-        if (data[i][j] > output) {
-          output = data[i][j];
-        }
-      }
-    }
-  }
-  else if (mode == 1) {
-    output = derivative[1][1];
-    for (int i = 1;i < derivative.length;i++) {
-      for (int j = 1;j < derivative[i].length;j++) {
-        if (derivative[i][j] > threshhold || derivative[i][j] < -1*threshhold) {
-          
-        }
-        else if (derivative[i][j] > output) {
-          output = derivative[i][j];
-        }
-      }
-    }
-  }
-  else if (mode == 2){
-    output = data3D[0][1][1];
-    for (int i = 0;i < data3D.length;i++) {
-      for (int j = 1;j < data3D[i].length;j++) {
-        for (int k = 1;k < data3D[i][j].length;k++) {
-          if (data3D[i][j][k] > output) {
-            output = data3D[i][j][k];
-          }
-        }
-      }
-    }
-  }
-  max = output;  
-}
-void getMinVal() {
-  double output = 0;
-  if (mode == 0) {
-    output = data[1][1];
-    for (int i = 1;i < data.length;i++) {
-      for (int j = 1;j < data[i].length;j++) {
-        if (data[i][j] < output) {
-          output = data[i][j];
-        }
-      }
-    }
-  }
-  else if (mode == 1) {
-    output = derivative[1][1];
-    for (int i = 1;i < derivative.length;i++) {
-      for (int j = 1;j < derivative[i].length;j++) {
-        if (derivative[i][j] > threshhold || derivative[i][j] < -1*threshhold) {
-          
-        }
-        else if (derivative[i][j] < output) {
-          output = derivative[i][j];
-        }
-      }
-    }
-  }
-  else if (mode == 2){
-    output = data3D[0][1][1];
-    for (int i = 0;i < data3D.length;i++) {
-      for (int j = 1;j < data3D[i].length;j++) {
-        for (int k = 1;k < data3D[i][j].length;k++) {
-          if (data3D[i][j][k] < output) {
-            output = data3D[i][j][k];
-          }
-        }
-      }
-    }
-  }
-  min = output;  
-}
-*/
 
 void normallise() {
   if (mode == 0) {
@@ -238,20 +158,31 @@ void removeBackground() {
   }
 }
 
-void differentiate2(int step) {
-  for (int i = 1;i < data.length;i++) {
-    for (int j = 1;j < data[i].length;j++) {
-      if (j < step || j > data[i].length-(step+1)) {
-        derivative[i][j] = 0;
-      }
-      else {
-        derivative[i][j] = (2*data[i][j]-data[i][j-step]-data[i][j+step]);
+void differentiate2() {
+  if (mode < 2) {    
+    for (int i = 1;i < data.length;i++) {
+      for (int j = 1;j < data[i].length;j++) {
+        if (j < step || j > data[i].length-(step+1)) {
+          derivative[i][j] = 0;
+        }
+        else {
+          derivative[i][j] = (2*data[i][j]-data[i][j-step]-data[i][j+step]);
+        }
       }
     }
   }
+  else {
+   for (int e = 1;e < data3D[0].length;e++) {    
+    for (int i = 0; i < data3D.length-1;i++) {
+      for (int j = step+1; j < data3D[i][e].length-step-1;j++) {
+        derivative3D[i][e][j] = (2*data3D[i][e][j] - data3D[i][e][j-step] - data3D[i][e][j+step]); 
+      }
+    }
+   }
+  }
 }
 
-void differentiate1(int step) {
+void differentiate1() {
   for (int i = 1;i < data.length;i++) {
     for (int j = 1;j < data[i].length;j++) {
       if (j < step) {
@@ -281,7 +212,7 @@ void alterData() {
   }
 }
 
-void minGrad(int step) {
+void minGrad() {
   if (mode < 2) {
     for (int i = step+1; i < data.length-step-1;i++) {
       for (int j = step+1; j < data[1].length-step-1;j++) {
@@ -292,11 +223,13 @@ void minGrad(int step) {
     }
   }
   else {
-    for (int i = 1; i < data3D.length-2;i++) {
-      for (int j = step+1; j < data3D[i][energy].length-step-1;j++) {
-        double gradP = (data3D[i+1][energy][j]-data3D[i-1][energy][j])/(-2);
-        double gradL = (data3D[i][energy][j-step]-data3D[i][energy][j+step])/(data3D[i][0][j-step]-data3D[i][0][j+step]);
-        derivative3D[i][energy][j] = data3D[i][energy][j]/Math.sqrt((gradP*gradP+gradL*gradL));
+    for (int e = 1;e < data3D[0].length;e++) {    
+      for (int i = 1; i < data3D.length-2;i++) {
+        for (int j = step+1; j < data3D[i][e].length-step-1;j++) {
+          double gradP = (data3D[i+1][e][j]-data3D[i-1][e][j])/(-2);
+          double gradL = (data3D[i][e][j-step]-data3D[i][e][j+step])/(data3D[i][0][j-step]-data3D[i][0][j+step]);
+          derivative3D[i][e][j] = data3D[i][e][j]/Math.sqrt((gradP*gradP+gradL*gradL));
+        }
       }
     }
   }

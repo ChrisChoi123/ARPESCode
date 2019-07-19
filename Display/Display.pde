@@ -8,13 +8,14 @@ double[][][] derivative3D;
 double max;
 double min;
 double avg;
-double threshhold = 25;
+double threshhold = 50;
 int mode = 3;
 double normRatio = 1;
 int fileNum = 37;
 int fileAmount = 30;
 int energy = 725; //around -.2 eV
 String fileName = "cro_001.txt";
+int step = 25;
 
 void loadData() throws FileNotFoundException {
   if (mode == 0 || mode == 1) {
@@ -202,8 +203,8 @@ void setup() {
   catch(FileNotFoundException e){
     System.out.println("Invalid text file");
   }
-  //differentiate2(25);
-  minGrad(25);
+  //differentiate2();
+  minGrad();
   normallise();
   //removeBackground();
   //normallise();
