@@ -2,31 +2,60 @@ import java.util.*;
 import java.io.*;
 
 double[][] data;
+double[][][] data3D;
 double[][] derivative;
+double[][][] derivative3D;
 double max;
 double min;
 double avg;
+double threshhold = 10;
+int mode = 1;
 double normRatio = 1;
+int fileNum;
 String fileName = "cro_001.txt";
 
 void loadData(String filename) throws FileNotFoundException {
-  String[] vals = loadStrings(filename);
-  data = new double[vals.length][801];
-  derivative = new double[vals.length][801];
-  for (int i = 0;i < vals.length;i++){
-    String[] nums = vals[i].split("\t");
-    if (nums.length > 1) {
-      for (int j = 0;j < nums.length;j++) {
-        if (i == 0 && j == 0) {
-          j++;
+  if (mode == 0 || mode == 1) {
+    String[] vals = loadStrings(filename);
+    data = new double[vals.length][801];
+    derivative = new double[vals.length][801];
+    for (int i = 0;i < vals.length;i++){
+      String[] nums = vals[i].split("\t");
+      if (nums.length > 1) {
+        for (int j = 0;j < nums.length;j++) {
+          if (i == 0 && j == 0) {
+            j++;
+          }
+          data[i][j] = Double.parseDouble(nums[j]);
         }
-        data[i][j] = Double.parseDouble(nums[j]);
+      }
+    }
+  }
+  else {
+    data3D = new double[30][1055][801];
+    derivative3D = new double[30][1055][801];
+    for (int f = 1;f < 31;f++) {
+      String add = "";
+      if (f < 10) {
+        add = "0";
+      }
+      String[] vals = loadStrings("cro_0"+fileNum+"_S0"+add+f+".txt");
+      for (int i = 0;i < vals.length;i++){
+        String[] nums = vals[i].split("\t");
+        if (nums.length > 1) {
+          for (int j = 0;j < nums.length;j++) {
+            if (i == 0 && j == 0) {
+              j++;
+            }
+            data3D[f-1][i][j] = Double.parseDouble(nums[j]);
+          }
+        }
       }
     }
   }
 }
 
-void graph(int mode) {
+void graph() {
   if (mode == 0) {
     for (int i = 1;i < data.length;i++) {
       for (int j = 1;j < data[i].length;j++) {
@@ -41,10 +70,14 @@ void graph(int mode) {
       }
     }
   }
-  else {
+  else if (mode == 1) {
     for (int i = 1;i < derivative.length;i++) {
       for (int j = 1;j < derivative[i].length;j++) {
-        if (derivative[i][j] > .5) {
+        if (derivative[i][j] > threshhold || derivative[i][j] < -1*threshhold) {
+          fill(255,255,0);
+          rect(65+i/3,330-j/3,1,1);
+        }
+        else if (derivative[i][j] > .5) {
           fill(255,(int)(255*(derivative[i][j]-.5)*2),0);
           rect(65+i/3,330-j/3,1,1);
         }
@@ -54,6 +87,9 @@ void graph(int mode) {
         }
       }
     }
+  }
+  else if (mode == 3) {
+    
   }
 }
 
@@ -85,24 +121,24 @@ void labelAxes() {
 }
 
 void keyPressed() {
-  
+  if (key == CODED) {
+    if (keyCode == UP) {
+      normRatio /= .9;
+      alterData();
+      display();
+    }
+    if (keyCode == DOWN) {
+      normRatio *= .9;
+      alterData();
+      display();
+    }
+  }
 }
 
-void setup() {
-  size(435,400); //520,280
-  try{
-    loadData(fileName);
-  }
-  catch(FileNotFoundException e){
-    System.out.println("Invalid text file");
-  }
-  differentiate2(25);
-  normallise(1);
+void display() {
   background(255);
   noStroke();
-  findAvg(1);
-  removeBackground(1);
-  graph(1);
+  graph();
   noFill();
   stroke(0);
   rect(63,329-data[0].length/3,data.length/3+4,data[0].length/3+3);
@@ -110,6 +146,22 @@ void setup() {
   fill(0);
   text("root:"+fileName+": "+(data.length-1)+" x "+ (data[1].length-1)+ " (no change)",110,42);
   labelAxes();
+}
+
+void setup() {
+  size(435,400); 
+  try{
+    loadData(fileName);
+  }
+  catch(FileNotFoundException e){
+    System.out.println("Invalid text file");
+  }
+  //differentiate2(25);
+  minGrad(35);
+  normallise();
+  //removeBackground();
+  //normallise();
+  display();
 }
 
 void draw() {

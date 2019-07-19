@@ -1,4 +1,4 @@
-void getMaxVal(int mode) {
+void getMaxVal() {
   double output;
   if (mode == 0) {
     output = data[1][1];
@@ -14,7 +14,10 @@ void getMaxVal(int mode) {
     output = derivative[1][1];
     for (int i = 1;i < derivative.length;i++) {
       for (int j = 1;j < derivative[i].length;j++) {
-        if (derivative[i][j] > output) {
+        if (derivative[i][j] > threshhold || derivative[i][j] < -1*threshhold) {
+          
+        }
+        else if (derivative[i][j] > output) {
           output = derivative[i][j];
         }
       }
@@ -22,7 +25,7 @@ void getMaxVal(int mode) {
   }
   max = output;  
 }
-void getMinVal(int mode) {
+void getMinVal() {
   double output;
   if (mode == 0) {
     output = data[1][1];
@@ -38,7 +41,10 @@ void getMinVal(int mode) {
     output = derivative[1][1];
     for (int i = 1;i < derivative.length;i++) {
       for (int j = 1;j < derivative[i].length;j++) {
-        if (derivative[i][j] < output) {
+        if (derivative[i][j] > threshhold || derivative[i][j] < -1*threshhold) {
+          
+        }
+        else if (derivative[i][j] < output) {
           output = derivative[i][j];
         }
       }
@@ -47,9 +53,9 @@ void getMinVal(int mode) {
   min = output;  
 }
 
-void normallise(int mode) {
-  getMaxVal(mode);
-  getMinVal(mode);
+void normallise() {
+  getMaxVal();
+  getMinVal();
   if (mode == 0) {
     for (int i = 1;i < data.length;i++) {
       for (int j = 1;j < data[i].length;j++) {
@@ -66,7 +72,7 @@ void normallise(int mode) {
   }
 }
 
-void findAvg(int mode) {
+void findAvg() {
   double total = 0;
   int amount = 0;
   if (mode == 0) {
@@ -88,7 +94,8 @@ void findAvg(int mode) {
   avg = total/amount; 
 }
 
-void removeBackground(int mode) {
+void removeBackground() {
+  findAvg();
   if (mode == 0) {
     for (int i = 1;i < data.length;i++) {
       for (int j = 1;j < data[i].length;j++) {
@@ -137,6 +144,29 @@ void differentiate1(int step) {
   }
 }
 
+void alterData() {
+  if (mode == 0) {
+    for (int i = 1;i < data.length;i++) {
+      for (int j = 1;j < data[i].length;j++) {
+        data[i][j] *= normRatio;
+      }
+    }
+  }
+  else {
+    for (int i = 1;i < derivative.length;i++) {
+      for (int j = 1;j < derivative[i].length;j++) {
+        derivative[i][j] *= normRatio;
+      }
+    }
+  }
+}
+
 void minGrad(int step) {
-  
+  for (int i = step+1; i < data.length-step-1;i++) {
+    for (int j = step+1; j < data[1].length-step-1;j++) {
+      double gradE = (data[i][j-step]-data[i][j+step])/(data[0][j-step]-data[0][j+step]);
+      double gradA = (data[i-step][j]-data[i+step][j])/(data[i-step][0]-data[i+step][0]);
+      derivative[i][j] = data[i][j]/Math.sqrt((gradE*gradE+gradA*gradA));
+    }
+  }
 }
