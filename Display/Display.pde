@@ -11,9 +11,9 @@ double avg;
 double threshhold = 10;
 int mode = 2;
 double normRatio = 1;
-int fileNum = 18;
-int fileAmount = 33;
-int energy = 525; //around -.2 eV
+int fileNum = 37;
+int fileAmount = 30;
+int energy = 725; //around -.2 eV
 String fileName = "cro_001.txt";
 
 void loadData() throws FileNotFoundException {
@@ -146,6 +146,14 @@ void keyPressed() {
       alterData();
       display();
     }
+    if (keyCode == LEFT) {
+      if (energy - 6 > 1) energy -= 6;
+      display();
+    }
+    if (keyCode == RIGHT) {
+      if (energy + 6 < 1055) energy += 6;
+      display();
+    }
   }
 }
 
@@ -161,6 +169,14 @@ void display() {
     fill(0);
     text("root:"+fileName+": "+(data.length-1)+" x "+ (data[1].length-1)+ " (no change)",110,42);
     labelAxes();
+  }
+  else {
+    textSize(14);
+    fill(0);
+    text("Energy: "+data3D[0][energy][0],110,42);
+    text("Lateral",5,200);
+    text("Angle",5,215);
+    text("Polar Angle",180,385);
   }
 }
 
