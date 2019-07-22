@@ -8,17 +8,19 @@ double[][][] derivative3D;
 double max;
 double min;
 double avg;
-double threshhold = 40;
-int mode = 3;
-double normRatio = 1;
+double threshhold = 50;
+int mode = 0;
+int startGraph = 0;
+double normRatio = 2;
 int fileNum = 37; //18 or 37
 int fileAmount = 30;
-int energy = 725; //around -.2 eV
-String fileName = "cro_001.txt";
+int energy = 725; 
+double hv = 82;//around -.2 eV
+String fileName = "cro_037_S001.txt";
 int step = 25;
 
 void loadData() throws FileNotFoundException {
-  if (mode == 0 || mode == 1) {
+  /*if (mode == 0 || mode == 1) {
     String[] vals = loadStrings(fileName);
     data = new double[vals.length][801];
     derivative = new double[vals.length][801];
@@ -34,7 +36,7 @@ void loadData() throws FileNotFoundException {
       }
     }
   }
-  else {
+  else {*/
     data3D = new double[fileAmount][1055][801];
     derivative3D = new double[fileAmount][1055][801];
     for (int f = 1;f < fileAmount+1;f++) {
@@ -56,12 +58,12 @@ void loadData() throws FileNotFoundException {
         }
       }
     }
-  }
+  //}
 }
 
 void graph() {
   if (mode == 0) {
-    for (int i = 1;i < data.length;i++) {
+    /*for (int i = 1;i < data.length;i++) {
       for (int j = 1;j < data[i].length;j++) {
         if (data[i][j] > .5) {
           fill(255,(int)(255*(data[i][j]-.5)*2),0);
@@ -72,22 +74,46 @@ void graph() {
           rect(65+i/3,330-j/3,1,1);
         }
       }
+    }*/
+    for (int i = 0;i < data3D[startGraph].length;i++) {
+      for (int j = 1;j < data3D[startGraph][i].length;j++) {
+        if (data3D[startGraph][i][j] > .5) {
+          fill(255,(int)(255*(data3D[startGraph][i][j]-.5)*2),0);
+          rect(85+j/3,400-i/3,1,1);
+        }
+        else {
+          fill((int)(255*(data3D[startGraph][i][j]*2)),0,0);
+          rect(85+j/3,400-i/3,1,1);
+        }
+      }
     }
   }
   else if (mode == 1) {
-    for (int i = 1;i < derivative.length;i++) {
+    /*for (int i = 1;i < derivative.length;i++) {
       for (int j = 1;j < derivative[i].length;j++) {
         if (derivative[i][j] > threshhold || derivative[i][j] < -1*threshhold) {
           fill(255,255,0);
           rect(65+i/3,330-j/3,1,1);
         }
-        else if (derivative[i][j] > .5) {
+        if (derivative[i][j] > .5) {
           fill(255,(int)(255*(derivative[i][j]-.5)*2),0);
           rect(65+i/3,330-j/3,1,1);
         }
         else {
           fill((int)(255*(derivative[i][j]*2)),0,0);
           rect(65+i/3,330-j/3,1,1);
+        }
+      }
+    }*/
+    for (int i = 0;i < derivative3D[startGraph].length;i++) {
+      for (int j = 1;j < derivative3D[startGraph][i].length;j++) {
+        if (derivative3D[startGraph][i][j] > .5) {
+          fill(255,(int)(255*(derivative3D[startGraph][i][j]-.5)*2),0);
+          rect(85+j/3,400-i/3,1,1);
+        }
+        else {
+          fill((int)(255*(derivative3D[startGraph][i][j]*2)),0,0);
+          rect(85+j/3,400-i/3,1,1);
         }
       }
     }
@@ -97,11 +123,11 @@ void graph() {
       for (int j = 1;j < data3D[i][energy].length;j++) {
         if (data3D[i][energy][j] > .5) {
           fill(255,(int)(255*(data3D[i][energy][j]-.5)*2),0);
-          rect(65+9*i,330-j/3,27,1);
+          rect(85+j/3,320-9*i,1,27);
         }
         else {
           fill((int)(255*(data3D[i][energy][j]*2)),0,0);
-          rect(65+9*i,330-j/3,27,1);
+          rect(85+j/3,320-9*i,1,27);
         }
       }
     }
@@ -111,11 +137,11 @@ void graph() {
       for (int j = 1;j < derivative3D[i][energy].length;j++) {
         if (derivative3D[i][energy][j] > .5) {
           fill(255,(int)(255*(derivative3D[i][energy][j]-.5)*2),0);
-          rect(65+9*i,330-j/3,27,1);
+          rect(85+j/3,320-9*i,1,27);
         }
         else {
           fill((int)(255*(derivative3D[i][energy][j]*2)),0,0);
-          rect(65+9*i,330-j/3,27,1);
+          rect(85+j/3,320-9*i,1,27);
         }
       }
     }
@@ -162,12 +188,19 @@ void keyPressed() {
       display();
     }
     if (keyCode == LEFT) {
-      if (energy - 6 > 1) energy -= 6;
-      display();
+      if (mode > 1) {
+        if (energy - 6 > 1) energy -= 6;
+        display();
+      }
     }
     if (keyCode == RIGHT) {
-      if (energy + 6 < 1055) energy += 6;
-      display();
+      if (mode > 1) {
+        if (energy + 6 < 1055) energy += 6;
+        display();
+      }
+      else {
+        
+      }    
     }
   }
   if (key == ' ') {
@@ -191,14 +224,14 @@ void display() {
   graph();
   noFill();
   stroke(0);
-  if (mode < 2) {
+  /*if (mode < 2) {
     rect(63,329-data[0].length/3,data.length/3+4,data[0].length/3+3);
     textSize(14);
     fill(0);
     text("root:"+fileName+": "+(data.length-1)+" x "+ (data[1].length-1)+ " (no change)",110,42);
     labelAxes();
-  }
-  else {
+  }*/
+  //else {
     textSize(14);
     fill(0);
     text("Energy: "+data3D[0][energy][0],110,42);
@@ -207,11 +240,11 @@ void display() {
     text("Lateral",5,200);
     text("Angle",5,215);
     text("Polar Angle",180,385);
-  }
+  //}
 }
 
 void setup() {
-  size(435,400); 
+  size(435,500); 
   try{
     loadData();
   }

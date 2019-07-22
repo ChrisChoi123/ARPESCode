@@ -16,7 +16,7 @@ void getMaxVal(double[][][] threeD) {
     for (int j = 1;j < threeD[i].length;j++) {
       for (int k = 1;k < threeD[i][j].length;k++) {
         if (threeD[i][j][k] > threshhold || threeD[i][j][k] < -1*threshhold) ;
-        else if (threeD[i][j][k] > output) {
+         else if (threeD[i][j][k] > output) {
           output = threeD[i][j][k];
         }  
       }
@@ -52,23 +52,23 @@ void getMinVal(double[][][] threeD) {
 }
 
 void normallise() {
-  if (mode == 0) {
+  /*if (mode == 0 || mode == 1) {
     getMaxVal(data);
     getMinVal(data);
   }
   if (mode == 1) {
     getMaxVal(derivative);
     getMinVal(derivative);
-  }
-  if (mode == 2) {
+  }*/
+  if (mode == 2 || mode == 0) {
     getMaxVal(data3D);
     getMinVal(data3D);
   }
-  if (mode == 3) {
+  if (mode == 3 || mode == 1) {
     getMaxVal(derivative3D);
     getMinVal(derivative3D);
   }
-  if (mode == 0) {
+  /*if (mode == 0) {
     for (int i = 1;i < data.length;i++) {
       for (int j = 1;j < data[i].length;j++) {
         data[i][j] = (data[i][j]-min)/(max-min);
@@ -81,8 +81,8 @@ void normallise() {
         derivative[i][j] = (derivative[i][j]-min)/(max-min);
       }
     }
-  }
-  else if (mode == 2){
+  }*/
+  if (mode == 2 || mode == 0){
     for (int i = 0;i < data3D.length;i++) {
       for (int j = 1;j < data3D[i].length;j++) {
         for (int k = 1;k < data3D[i][j].length;k++) {
@@ -91,7 +91,7 @@ void normallise() {
       }
     }
   }
-  else if (mode == 3){
+  else if (mode == 3 || mode == 1){
     for (int i = 0;i < derivative3D.length;i++) {
       for (int j = 1;j < derivative3D[i].length;j++) {
         for (int k = 1;k < derivative3D[i][j].length;k++) {
@@ -203,7 +203,7 @@ void alterData() {
       }
     }
   }
-  else {
+  else if (mode == 1){
     for (int i = 1;i < derivative.length;i++) {
       for (int j = 1;j < derivative[i].length;j++) {
         derivative[i][j] *= normRatio;
@@ -213,7 +213,7 @@ void alterData() {
 }
 
 void minGrad() {
-  if (mode < 2) {
+  /*if (mode < 2) {
     for (int i = step+1; i < data.length-step-1;i++) {
       for (int j = step+1; j < data[1].length-step-1;j++) {
         double gradE = (data[i][j-step]-data[i][j+step])/(data[0][j-step]-data[0][j+step]);
@@ -221,8 +221,8 @@ void minGrad() {
         derivative[i][j] = data[i][j]/Math.sqrt((gradE*gradE+gradA*gradA));
       }
     }
-  }
-  else {
+  }*/
+  //else {
     for (int e = 1;e < data3D[0].length;e++) {    
       for (int i = 1; i < data3D.length-2;i++) {
         for (int j = step+1; j < data3D[i][e].length-step-1;j++) {
@@ -232,5 +232,5 @@ void minGrad() {
         }
       }
     }
-  }
+  //}
 }
