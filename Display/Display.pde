@@ -8,8 +8,8 @@ double[][][] derivative3D;
 double max;
 double min;
 double avg;
-double threshhold = 50;
-int mode = 0;
+double threshhold = 4;
+int mode = 1;
 int startGraph = 0;
 double normRatio = 2;
 int fileNum = 37; //18 or 37
@@ -17,7 +17,7 @@ int fileAmount = 30;
 int energy = 725; 
 double hv = 82;//around -.2 eV
 String fileName = "cro_037_S001.txt";
-int step = 25;
+int step = 30;
 
 void loadData() throws FileNotFoundException {
   /*if (mode == 0 || mode == 1) {
@@ -192,6 +192,10 @@ void keyPressed() {
         if (energy - 6 > 1) energy -= 6;
         display();
       }
+      else {
+        if (startGraph > 0) startGraph -= 1;
+        display();
+      }
     }
     if (keyCode == RIGHT) {
       if (mode > 1) {
@@ -199,7 +203,8 @@ void keyPressed() {
         display();
       }
       else {
-        
+        if (startGraph < fileAmount) startGraph += 1;
+        display();
       }    
     }
   }
@@ -224,23 +229,30 @@ void display() {
   graph();
   noFill();
   stroke(0);
-  /*if (mode < 2) {
-    rect(63,329-data[0].length/3,data.length/3+4,data[0].length/3+3);
+  if (mode < 2) {
+    /*rect(63,329-data[0].length/3,data.length/3+4,data[0].length/3+3);
     textSize(14);
     fill(0);
     text("root:"+fileName+": "+(data.length-1)+" x "+ (data[1].length-1)+ " (no change)",110,42);
-    labelAxes();
-  }*/
-  //else {
+    labelAxes();*/
+    textSize(14);
+    fill(0);
+    text("Polar Angle: "+(-8.0+startGraph),110,42);
+    if (mode == 0) text("Original Data",110,15);
+    else text("Minimum Gradient",110,15);
+    text("Energy",5,200);
+    text("Lateral Angle",180,450);
+  }
+  else {
     textSize(14);
     fill(0);
     text("Energy: "+data3D[0][energy][0],110,42);
-    if (mode == 2 || mode == 0) text("Original Data",110,15);
+    if (mode == 2) text("Original Data",110,15);
     else text("Minimum Gradient",110,15);
     text("Lateral",5,200);
     text("Angle",5,215);
     text("Polar Angle",180,385);
-  //}
+  }
 }
 
 void setup() {

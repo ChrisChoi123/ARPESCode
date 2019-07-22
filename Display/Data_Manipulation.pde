@@ -29,7 +29,7 @@ void getMinVal(double[][] twoD) {
   for (int i = 1;i < twoD.length;i++) {
     for (int j = 1;j < twoD[i].length;j++) {
       if (twoD[i][j] > threshhold || twoD[i][j] < -1*threshhold) ;
-      else if (derivative[i][j] < output) {
+      else if (twoD[i][j] < output) {
         output = twoD[i][j];
       }
     }
@@ -222,7 +222,7 @@ void minGrad() {
       }
     }
   }*/
-  //else {
+  if (mode > 1) {
     for (int e = 1;e < data3D[0].length;e++) {    
       for (int i = 1; i < data3D.length-2;i++) {
         for (int j = step+1; j < data3D[i][e].length-step-1;j++) {
@@ -232,5 +232,16 @@ void minGrad() {
         }
       }
     }
-  //}
+  }
+  else {
+    for (int i = 0;i < data3D.length;i++) {    
+      for (int j = step+1;j < data3D[i].length-1-step;j++) {
+        for (int k = step+1; k < data3D[i][j].length-step-1;k++) {
+          double gradE = (data3D[i][j-step][k]-data3D[i][j+step][k])/(data3D[i][j-step][0]-data3D[i][j+step][0]);
+          double gradA = (data3D[i][j][k-step]-data3D[i][j][k+step])/(data3D[i][0][k-step]-data3D[i][0][k+step]);
+          derivative3D[i][j][k] = 1.0/Math.sqrt((gradE*gradE+gradA*gradA));
+        }
+      }
+    }
+  }
 }
