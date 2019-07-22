@@ -8,9 +8,9 @@ double[][][] derivative3D;
 double max;
 double min;
 double avg;
-double threshhold = 4;
+double threshhold = 10;
 int mode = 1;
-int startGraph = 0;
+int startGraph = 1;
 double normRatio = 2;
 int fileNum = 37; //18 or 37
 int fileAmount = 30;
@@ -212,12 +212,12 @@ void keyPressed() {
       if (mode == 0 || mode == 2) mode++;
       else mode--;
       if (mode == 2 || mode == 0) {
-        normallise();
+        //normallise();
         display();
       }
       else if (mode == 3 || mode == 1) {
-        minGrad();
-        normallise();
+        //minGrad();
+        //normallise();
         display();
       }
     }
