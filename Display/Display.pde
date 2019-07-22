@@ -8,14 +8,14 @@ double[][][] derivative3D;
 double max;
 double min;
 double avg;
-double threshhold = 5;
-int mode = 1;
+double threshhold = 10;
+int mode = 3;
 int startGraph = 1;
 double normRatio = 2;
 int fileNum = 37; //18 or 37
-int fileAmount = 30;
+int fileAmount = 30; // 33 or 30
 int energy = 725; 
-double hv = 82;//around -.2 eV
+double hv = 82;
 String fileName = "cro_037_S001.txt";
 int step = 30;
 
@@ -53,7 +53,7 @@ void loadData() throws FileNotFoundException {
             if (i == 0 && j == 0) {
               j++;
             }
-            data3D[f-1][i][j] = Double.parseDouble(nums[j]);
+            data3D[f-1][i][j] = Double.parseDouble(nums[j]) / (1.0/(1+Math.pow(2.718282,data3D[f-1][i][0]/.0194752)));
           }
         }
       }
@@ -136,11 +136,11 @@ void graph() {
     for (int i = 0;i < derivative3D.length;i++) {
       for (int j = 1;j < derivative3D[i][energy].length;j++) {
         if (derivative3D[i][energy][j] > .5) {
-          fill(255,(int)(255*(1.5*derivative3D[i][energy][j]-.5)*2),0);
+          fill(255,(int)(255*(derivative3D[i][energy][j]-.5)*2),0);
           rect(85+j/3,320-9*i,1,27);
         }
         else {
-          fill((int)(255*(1.5*derivative3D[i][energy][j]*2)),0,0);
+          fill((int)(255*(derivative3D[i][energy][j]*2)),0,0);
           rect(85+j/3,320-9*i,1,27);
         }
         text(""+(-8.0+i),20, 320-9*i);
@@ -178,7 +178,7 @@ void labelAxes() {
 
 void keyPressed() {
   if (key == CODED) {
-    if (keyCode == UP) {
+    /*if (keyCode == UP) {
       normRatio /= .9;
       alterData();
       display();
@@ -187,7 +187,7 @@ void keyPressed() {
       normRatio *= .9;
       alterData();
       display();
-    }
+    }*/
     if (keyCode == LEFT) {
       if (mode > 1) {
         if (energy - 6 > 1) energy -= 6;
