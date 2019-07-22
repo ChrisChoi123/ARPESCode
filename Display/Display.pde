@@ -136,11 +136,11 @@ void graph() {
     for (int i = 0;i < derivative3D.length;i++) {
       for (int j = 1;j < derivative3D[i][energy].length;j++) {
         if (derivative3D[i][energy][j] > .5) {
-          fill(255,(int)(255*(derivative3D[i][energy][j]-.5)*2),0);
+          fill(255,(int)(255*(1.5*derivative3D[i][energy][j]-.5)*2),0);
           rect(85+j/3,320-9*i,1,27);
         }
         else {
-          fill((int)(255*(derivative3D[i][energy][j]*2)),0,0);
+          fill((int)(255*(1.5*derivative3D[i][energy][j]*2)),0,0);
           rect(85+j/3,320-9*i,1,27);
         }
       }

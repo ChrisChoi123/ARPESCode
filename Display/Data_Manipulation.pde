@@ -248,7 +248,7 @@ void minGrad() {
           derivative3D[i][j][k] += Math.pow((data3D[i][j][k] - data3D[i][j][k+step]) / delta1, 2) + Math.pow((data3D[i][j][k] - data3D[i][j][k-step]) / delta1, 2);
           derivative3D[i][j][k] += Math.pow((data3D[i][j][k] - data3D[i+1][j][k+step]) / sqrtdelta, 2) + Math.pow((data3D[i][j][k] - data3D[i-1][j][k-step]) / sqrtdelta, 2);
           derivative3D[i][j][k] += Math.pow((data3D[i][j][k] - data3D[i-1][j][k+step]) / sqrtdelta, 2) + Math.pow((data3D[i][j][k] - data3D[i+1][j][k-step]) / sqrtdelta, 2);
-          derivative3D[i][j][k] = data3D[i][j][k] / Math.sqrt(derivative3D[i][j][k]);
+          derivative3D[i][j][k] = data3D[i][j][k] / (Math.sqrt(derivative3D[i][j][k]) * 1.0/(1+Math.pow(2.718282,data3D[i][j][0]/.0194752)));
         }
       }
     }
