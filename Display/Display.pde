@@ -8,7 +8,7 @@ double[][][] derivative3D;
 double max;
 double min;
 double avg;
-double threshhold = 10;
+double threshhold = 5;
 int mode = 1;
 int startGraph = 1;
 double normRatio = 2;
@@ -143,6 +143,7 @@ void graph() {
           fill((int)(255*(1.5*derivative3D[i][energy][j]*2)),0,0);
           rect(85+j/3,320-9*i,1,27);
         }
+        text(""+(-8.0+i),20, 320-9*i);
       }
     }
   }
@@ -212,7 +213,7 @@ void keyPressed() {
       if (mode == 0 || mode == 2) mode++;
       else mode--;
       if (mode == 2 || mode == 0) {
-        //normallise();
+        normallise();
         display();
       }
       else if (mode == 3 || mode == 1) {
@@ -241,7 +242,7 @@ void display() {
     if (mode == 0) text("Original Data",110,15);
     else text("Minimum Gradient",110,15);
     text("Energy",5,200);
-    text("Lateral Angle",180,450);
+    text("Momentum",180,450);
   }
   else {
     textSize(14);

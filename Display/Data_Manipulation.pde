@@ -239,7 +239,7 @@ void minGrad() {
         for (int k = step+1; k < data3D[i][j].length-step-1;k++) {
           /*double gradE = (data3D[i][j-step][k]-data3D[i][j+step][k])/(data3D[i][j-step][0]-data3D[i][j+step][0]);
           double gradA = (data3D[i][j][k-step]-data3D[i][j][k+step])/(data3D[i][0][k-step]-data3D[i][0][k+step]);
-          derivative3D[i][j][k] = data3D[i][j][k]/Math.Math.sqrt((gradE*gradE+gradA*gradA));*/
+          derivative3D[i][j][k] = data3D[i][j][k]/(Math.sqrt((gradE*gradE+gradA*gradA))* (1.0/(1+Math.pow(2.718282,data3D[i][j][0]/.0194752))));*/
           double energy = Math.sqrt(data3D[i][j][0] + hv - 4.5);
           double delta1 = energy * (Math.sin(0.0174532925*data3D[i][0][k]) - Math.sin(0.0174532925*data3D[i][0][k+step]));
           double delta2 = energy * Math.cos(0.0174532925*data3D[i][0][k]) * (Math.sin(0.0174532925*(-8.0 + i * 1)) - Math.sin(0.0174532925*(-8.0 + (i + 1) * 1)));
@@ -248,7 +248,7 @@ void minGrad() {
           derivative3D[i][j][k] += Math.pow((data3D[i][j][k] - data3D[i][j][k+step]) / delta1, 2) + Math.pow((data3D[i][j][k] - data3D[i][j][k-step]) / delta1, 2);
           derivative3D[i][j][k] += Math.pow((data3D[i][j][k] - data3D[i+1][j][k+step]) / sqrtdelta, 2) + Math.pow((data3D[i][j][k] - data3D[i-1][j][k-step]) / sqrtdelta, 2);
           derivative3D[i][j][k] += Math.pow((data3D[i][j][k] - data3D[i-1][j][k+step]) / sqrtdelta, 2) + Math.pow((data3D[i][j][k] - data3D[i+1][j][k-step]) / sqrtdelta, 2);
-          derivative3D[i][j][k] = data3D[i][j][k] / (Math.sqrt(derivative3D[i][j][k]) * 1.0/(1+Math.pow(2.718282,data3D[i][j][0]/.0194752)));
+          derivative3D[i][j][k] = data3D[i][j][k] / ((Math.sqrt(derivative3D[i][j][k]) * (1.0/(1+Math.pow(2.718282,data3D[i][j][0]/.0194752)))) );
         }
       }
     }
