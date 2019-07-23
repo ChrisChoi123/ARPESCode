@@ -9,7 +9,7 @@ double max;
 double min;
 double avg;
 double threshhold = 10;
-int mode = 3;
+int mode = 1;
 int startGraph = 1;
 double normRatio = 2;
 int fileNum = 37; //18 or 37
@@ -143,7 +143,6 @@ void graph() {
           fill((int)(255*(derivative3D[i][energy][j]*2)),0,0);
           rect(85+j/3,320-9*i,1,27);
         }
-        text(""+(-8.0+i),20, 320-9*i);
       }
     }
   }
@@ -264,7 +263,8 @@ void setup() {
   catch(FileNotFoundException e){
     System.out.println("Invalid text file");
   }
-  minGrad();
+  //minGrad();
+  differentiate2();
   normallise();
   display();
 }

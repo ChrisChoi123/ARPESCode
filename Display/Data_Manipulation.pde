@@ -159,7 +159,7 @@ void removeBackground() {
 }
 
 void differentiate2() {
-  if (mode < 2) {    
+  /*if (mode < 2) {    
     for (int i = 1;i < data.length;i++) {
       for (int j = 1;j < data[i].length;j++) {
         if (j < step || j > data[i].length-(step+1)) {
@@ -170,19 +170,28 @@ void differentiate2() {
         }
       }
     }
+  }*/
+  if (mode < 2) {
+   for (int i = 0;i < data3D.length;i++) {    
+    for (int j = 0; j < data3D[i].length;j++) {
+      for (int k = step; k < data3D[i][j].length-step;k++) {
+        derivative3D[i][j][k] = (2*data3D[i][j][k] - data3D[i][j][k-step] - data3D[i][j][k+step]); 
+      }
+    }
+   }
   }
   else {
-   for (int e = 1;e < data3D[0].length;e++) {    
-    for (int i = 0; i < data3D.length-1;i++) {
-      for (int j = step+1; j < data3D[i][e].length-step-1;j++) {
-        derivative3D[i][e][j] = (2*data3D[i][e][j] - data3D[i][e][j-step] - data3D[i][e][j+step]); 
+   for (int i = 1;i < data3D.length-1;i++) {    
+    for (int j = 0; j < data3D[i].length;j++) {
+      for (int k = 0; k < data3D[i][j].length;k++) {
+        derivative3D[i][j][k] = (2*data3D[i][j][k] - data3D[i-1][j][k] - data3D[i+1][j][k]); 
       }
     }
    }
   }
 }
 
-void differentiate1() {
+/*void differentiate1() {
   for (int i = 1;i < data.length;i++) {
     for (int j = 1;j < data[i].length;j++) {
       if (j < step) {
@@ -193,7 +202,7 @@ void differentiate1() {
       }
     }
   }
-}
+}*/
 
 void alterData() {
   if (mode == 0) {
