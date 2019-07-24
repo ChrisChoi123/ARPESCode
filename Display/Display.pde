@@ -9,21 +9,23 @@ double max;
 double min;
 double avg;
 double threshhold = 10;
-int mode = 1;
-int startGraph = 1;
+int mode = 4;
+int startGraph = 0;
 double normRatio = 2;
 int fileNum = 37; //18 or 37
 int fileAmount = 30; // 33 or 30
 int energy = 725; 
 double hv = 82;
-String fileName = "cro_037_S001.txt";
+String fileName = "ZT50001.txt";
 int step = 30;
+int wid = 352; // 352 or 801
+int hi = 747; // 747 or 1055
 
 void loadData() throws FileNotFoundException {
-  /*if (mode == 0 || mode == 1) {
+  if (mode ==4) {
     String[] vals = loadStrings(fileName);
-    data = new double[vals.length][801];
-    derivative = new double[vals.length][801];
+    data = new double[vals.length][wid];
+    derivative = new double[vals.length][wid];
     for (int i = 0;i < vals.length;i++){
       String[] nums = vals[i].split("\t");
       if (nums.length > 1) {
@@ -36,9 +38,9 @@ void loadData() throws FileNotFoundException {
       }
     }
   }
-  else {*/
-    data3D = new double[fileAmount][1055][801];
-    derivative3D = new double[fileAmount][1055][801];
+  else {
+    data3D = new double[fileAmount][hi][wid];
+    derivative3D = new double[fileAmount][hi][wid];
     for (int f = 1;f < fileAmount+1;f++) {
       String add = "";
       if (f < 10) {
@@ -58,23 +60,25 @@ void loadData() throws FileNotFoundException {
         }
       }
     }
-  //}
+  }
 }
 
 void graph() {
-  if (mode == 0) {
-    /*for (int i = 1;i < data.length;i++) {
+  if (mode == 4) {
+    for (int i = 1;i < data.length;i++) {
       for (int j = 1;j < data[i].length;j++) {
         if (data[i][j] > .5) {
           fill(255,(int)(255*(data[i][j]-.5)*2),0);
-          rect(65+i/3,330-j/3,1,1);
+          rect(0+3*i/4,430-3*j/4,1,1);
         }
         else {
           fill((int)(255*(data[i][j]*2)),0,0);
-          rect(65+i/3,330-j/3,1,1);
+          rect(0+3*i/4,430-3*j/4,1,1);
         }
-      }
-    }*/
+      } 
+    }
+  }
+  if (mode == 0) {  
     for (int i = 0;i < data3D[startGraph].length;i++) {
       for (int j = 1;j < data3D[startGraph][i].length;j++) {
         if (data3D[startGraph][i][j] > .5) {
@@ -199,7 +203,7 @@ void keyPressed() {
     }
     if (keyCode == RIGHT) {
       if (mode > 1) {
-        if (energy + 6 < 1055) energy += 6;
+        if (energy + 6 < hi) energy += 6;
         display();
       }
       else {
@@ -243,7 +247,7 @@ void display() {
     text("Energy",5,200);
     text("Momentum",180,450);
   }
-  else {
+  else if (mode < 4){
     textSize(14);
     fill(0);
     text("Energy: "+data3D[0][energy][0],110,42);
@@ -264,7 +268,7 @@ void setup() {
     System.out.println("Invalid text file");
   }
   //minGrad();
-  differentiate2();
+  //differentiate2();
   normallise();
   display();
 }

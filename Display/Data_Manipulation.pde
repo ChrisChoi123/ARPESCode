@@ -52,10 +52,11 @@ void getMinVal(double[][][] threeD) {
 }
 
 void normallise() {
-  /*if (mode == 0 || mode == 1) {
+  if (mode == 4) {
     getMaxVal(data);
     getMinVal(data);
   }
+  /*
   if (mode == 1) {
     getMaxVal(derivative);
     getMinVal(derivative);
@@ -68,13 +69,13 @@ void normallise() {
     getMaxVal(derivative3D);
     getMinVal(derivative3D);
   }
-  /*if (mode == 0) {
+  if (mode == 4) {
     for (int i = 1;i < data.length;i++) {
       for (int j = 1;j < data[i].length;j++) {
         data[i][j] = (data[i][j]-min)/(max-min);
       }
     }
-  }
+  }/*
   else if (mode == 1) {
     for (int i = 1;i < derivative.length;i++) {
       for (int j = 1;j < derivative[i].length;j++) {
