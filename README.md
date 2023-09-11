@@ -1,4 +1,6 @@
 # ARPESCode
+
+This is code I wrote under the supervision of Dr. L. Andrew Wray at New York University, Center for Quantum Phenomena 
 <h4> Description </h4></br>
 This is a visualliser for APRES data. It can display the orignal data with respect to energy (in eV) and the two directions of momentum, derived from the lateral angle and polar angle from the ARPES measurements. You can choose to view the graphs of their minumum gradient or the orignal data. </br></br>
 <h4> Directions </h4></br>
